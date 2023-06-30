@@ -1,16 +1,16 @@
-
-from pathlib import Path
-from dotenv import load_dotenv
 import os
+from pathlib import Path
+
+from dotenv import load_dotenv
 
 load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = os.environ.get("SECRET_KEY") # loaded via enviroment variable
+SECRET_KEY = os.environ.get("SECRET_KEY")  # loaded via enviroment variable
 
 
-DEBUG = True   #toggle to run production setting.
+DEBUG = True  # toggle to run production setting.
 
 
 INSTALLED_APPS = [
@@ -55,10 +55,6 @@ TEMPLATES = [
 WSGI_APPLICATION = "core.wsgi.application"
 
 
-
-
-
-
 AUTH_PASSWORD_VALIDATORS = [
     {
         "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
@@ -75,7 +71,6 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
-
 LANGUAGE_CODE = "en-us"
 
 TIME_ZONE = "UTC"
@@ -88,6 +83,4 @@ STATIC_URL = "static/"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-REST_FRAMEWORK = {
-    
-}
+REST_FRAMEWORK = {}
