@@ -1,14 +1,16 @@
 
 from pathlib import Path
+from dotenv import load_dotenv
+import os
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
+load_dotenv()
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = "django-insecure-ns=u3o$v#tos=6$8mfbh(8=-^h@otz(p5*6m!=din&nuob!)&8"
+SECRET_KEY = os.environ.get("SECRET_KEY") # loaded via enviroment variable
 
-DEBUG = True
 
-ALLOWED_HOSTS = []
+DEBUG = True   #toggle to run production setting.
 
 
 INSTALLED_APPS = [
@@ -52,12 +54,7 @@ WSGI_APPLICATION = "core.wsgi.application"
 
 
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
-    }
-}
+
 
 
 AUTH_PASSWORD_VALIDATORS = [
