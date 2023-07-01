@@ -1,0 +1,7 @@
+ command for creating or updating the schema.yml file
+ python mange.py spectacular --file schema.yml
+
+
+ coverage commands (pip install coverage)
+ coverage run -m pytest  (will create a coverage file)
+ coverage html (will create a htmlcov folder)
