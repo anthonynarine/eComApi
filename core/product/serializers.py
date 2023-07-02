@@ -1,4 +1,5 @@
 from rest_framework import serializers
+
 from .models import Brand, Category, Product
 
 
@@ -17,9 +18,9 @@ class BrandSerializer(serializers.ModelSerializer):
 class ProductSerializer(serializers.ModelSerializer):
     category = CategorySerializer()
     brand = BrandSerializer()
-    """this tell django that brand+category has a relationship with product in order to make
+    """this tells django that brand+category has a relationship with product in order to make
     that connection we need to bring in their model's serializers. see the model for 
-    how fk relationship was built. querying products will also need cat + brand since they 
+    how fk relationship was built. querying products will also need cat + brand since they're
     connected
 """
 
