@@ -1,7 +1,21 @@
+# UNITTEST:  testing the __str__() dunder method.
+
+"""try to isolate the:
+
+def __str__(self):
+    return self.name
+    
+function as best as possible, and mark
+or create some data and then test
+that function individually."""
+
 import factory
 
 # bring in model for testing
 from core.product.models import Brand, Category, Product
+
+# COMMAND to run test: pytest
+# COMMAND to check possible code that needs testing: pytest --cov
 
 
 # build a factory to test the Category Model.
@@ -10,7 +24,12 @@ class CategoryFactory(factory.django.DjangoModelFactory):
         model = Category
 
     # testing currently done on name field only
-    name = "test_category"
+    # name = "test_category"
+    name = factory.Sequence(lambda n: "Category_%d" % n)
+    """ this will generate a diffrent number on the name category and increment
+        it so for batch creation all the names are not "test_category > category_0..."
+        this will allow the field type unique=True to pass this test
+    """
 
 
 # build a factory to test the Brand Model.
@@ -18,7 +37,8 @@ class BrandFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Brand
 
-    name = "test_brand"
+    # name = "test_brand"
+    name = factory.Sequence(lambda n: "Brand_%d" % n)
 
 
 class ProductFactory(factory.django.DjangoModelFactory):

@@ -1,5 +1,9 @@
 import pytest
 
+# import pytest will give access to the db
+# the actual db isn't used for testing pytest uses it to generate it's own data
+
+# bring in our Django database for global access (provides access to all tests.)
 pytestmark = pytest.mark.django_db
 
 
