@@ -59,3 +59,4 @@ class ProductFactory(factory.django.DjangoModelFactory):
     we're going to initiate and generate a brand, and then we do the same
     thing for the category as well.
     """
+    is_active = True
