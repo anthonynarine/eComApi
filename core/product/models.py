@@ -23,6 +23,9 @@ class Brand(models.Model):
 
 class Product(models.Model):
     name = models.CharField(max_length=100)
+    # slug creates a usable url string that can be utilized as
+    # a paramater instead of ID in the url which can then be passed to the view
+    slug = models.SlugField(max_length=255)
     description = models.TextField(blank=True)
     is_digital = models.BooleanField(default=False)
     brand = models.ForeignKey(Brand, on_delete=models.CASCADE)

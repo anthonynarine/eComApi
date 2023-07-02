@@ -1,3 +1,5 @@
+from re import T
+
 from drf_spectacular.utils import extend_schema
 from rest_framework import viewsets
 from rest_framework.decorators import action
@@ -40,6 +42,14 @@ class ProductViewSet(viewsets.ViewSet):
     """A simple Viewset for viewing all Products"""
 
     queryset = Product.objects.all()
+    lookup_field = "slug"
+    # default lookup field is pk
+
+    def retrieve(self, request, slug=None):
+        """function that bring in a individual product"""
+        serializer = ProductSerializer(self.queryset.filter(slug=slug), many=True)
+
+        return Response(serializer.data)
 
     # collect data from database
     @extend_schema(responses=ProductSerializer)
@@ -52,18 +62,17 @@ class ProductViewSet(viewsets.ViewSet):
         methods=["get"],
         detail=False,
         # see NOTE below that explains this regex expression
-        url_path=r"category/(?P<cat_name>\w+)/all",
-        url_name="all",
+        url_path=r"category/(?P<cat_search_term>\w+)/all",
     )
-    def list_product_by_category(self, request, cat_name=None):
+    def list_product_by_category(self, request, cat_search_term=None):
         """An endpoint to return product by category"""
         serializer = ProductSerializer(
-            self.queryset.filter(category__name=cat_name), many=True
+            self.queryset.filter(category__name=cat_search_term), many=True
         )
         return Response(serializer.data)
 
     """the regex expression above is to produce
-    this url path - /api/product/category/{cat_name}/all/
+    this url path - /api/product/category/{cat_search_term}/all/
     this path essentially expects and input term that matches a category name.
     see schema/docs path. our filter will traverse the products category field
     go to categories (which is a fk) we do not want the fk data so we traverse to name
