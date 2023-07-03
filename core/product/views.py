@@ -1,4 +1,3 @@
-from re import T
 
 from drf_spectacular.utils import extend_schema
 from rest_framework import viewsets

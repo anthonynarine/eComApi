@@ -48,5 +48,9 @@ class ProductLine(models.Model):
     sku = models.CharField(max_length=100)
     stock_qty = models.IntegerField()
     # on_delete of a product curently will also delete the product line
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    # related_name was added to be used to establish a reverse relationship
+    # with product for serialization. see serializer
+    product = models.ForeignKey(
+        Product, on_delete=models.CASCADE, related_name="product_line"
+    )
     is_active = models.BooleanField(default=False)
