@@ -1,4 +1,3 @@
-
 from drf_spectacular.utils import extend_schema
 from rest_framework import viewsets
 from rest_framework.decorators import action
@@ -27,6 +26,7 @@ class BrandViewSet(viewsets.ViewSet):
     """A simple Viewset for viewing all Brands"""
 
     queryset = Brand.objects.all()
+
     # collect data from database
 
     # this decorator tells drf_specatcular which serializer we are using
@@ -40,13 +40,17 @@ class BrandViewSet(viewsets.ViewSet):
 class ProductViewSet(viewsets.ViewSet):
     """A simple Viewset for viewing all Products"""
 
-    queryset = Product.objects.all()
+    # isacitve method called on all objects (see the product model manager)
+    queryset = Product.objects.all().isactive()
     lookup_field = "slug"
     # default lookup field is pk
 
     def retrieve(self, request, slug=None):
         """function that bring in a individual product"""
-        serializer = ProductSerializer(self.queryset.filter(slug=slug), many=True)
+        serializer = ProductSerializer(
+            self.queryset.filter(slug=slug).select_related("category", "brand"),
+            many=True,
+        )  # select_related() helps to make querying data more efficient. see notes below.
 
         return Response(serializer.data)
 
@@ -77,3 +81,16 @@ class ProductViewSet(viewsets.ViewSet):
     go to categories (which is a fk) we do not want the fk data so we traverse to name
     and if the name matches the inputed inpurt term is will return the data
     """
+
+
+###############################NOTES#######################################
+
+# NOTE select_related()
+"""selected_related() - returns a QuerySet that will follow fk relationships,
+selecting additional related-object data when it executes its query. This is
+a performance booster which results in a single more complex query but means
+later use of fk relationship wont require db queries. since our product comes 
+with additional data from the category + brand and  tables
+we can use select_related() to join the qurey using the fk eliminating
+multiple individual queries it does not work. It does NOT work on reverse
+fk relationships so we will not be able to include product line"""
