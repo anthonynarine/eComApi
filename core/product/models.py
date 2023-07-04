@@ -1,5 +1,3 @@
-from re import A
-
 from django.db import models
 from jsonschema import ValidationError
 from mptt.models import MPTTModel, TreeForeignKey
@@ -74,3 +72,27 @@ class ProductLine(models.Model):
 
     def __str__(self):
         return str(self.sku)
+
+
+class ProductImage(models.Model):
+    name = models.CharField(max_length=100)
+    alt_text = models.CharField(max_length=100)
+    url = models.ImageField(upload_to=None)
+    productline = models.ForeignKey(
+        ProductLine, on_delete=models.CASCADE, related_name="product_image"
+    )
+    order = OrderField(unique_for_field="productline", blank=True)
+
+    def clean(self):
+        """this function will check to make sure that the order num is not repeated"""
+        query_set = ProductImage.objects.filter(productlone=self.productline)
+        for object in query_set:
+            if self.id != object.id and self.order == object.order:
+                raise ValidationError("Duplicate value.")
+
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        return super(ProductImage, self).save(*args, **kwargs)
+
+    def __str__(self):
+        return str(self.name)
