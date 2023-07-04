@@ -40,7 +40,6 @@ class BrandViewSet(viewsets.ViewSet):
 class ProductViewSet(viewsets.ViewSet):
     """A simple Viewset for viewing all Products"""
 
-    # isacitve method called on all objects (see the product model manager)
     queryset = Product.objects.all().isactive()
     lookup_field = "slug"
     # default lookup field is pk
@@ -50,8 +49,7 @@ class ProductViewSet(viewsets.ViewSet):
         serializer = ProductSerializer(
             self.queryset.filter(slug=slug).select_related("category", "brand"),
             many=True,
-        )  # select_related() helps to make querying data more efficient. see notes below.
-
+        )
         return Response(serializer.data)
 
     # collect data from database
@@ -64,33 +62,11 @@ class ProductViewSet(viewsets.ViewSet):
     @action(
         methods=["get"],
         detail=False,
-        # see NOTE below that explains this regex expression
-        url_path=r"category/(?P<slug>[\w-]+)",
+        url_path=r"category/(?P<cat_search_term>\w+)/all",
     )
-    def list_product_by_category_slug(self, request, slug=None):
+    def list_product_by_category(self, request, cat_search_term=None):
         """An endpoint to return product by category"""
         serializer = ProductSerializer(
-            self.queryset.filter(category__slug=slug), many=True
+            self.queryset.filter(category__name=cat_search_term), many=True
         )
         return Response(serializer.data)
-
-    """the regex expression above is to produce
-    this url path - /api/product/category/{slug}/
-    this path essentially expects and input term that matches a category name.
-    see schema/docs path. our filter will traverse the products category field
-    go to categories (which is a fk) we do not want the fk data so we traverse to name
-    and if the name matches the inputed inpurt term is will return the data
-    """
-
-
-###############################NOTES#######################################
-
-# NOTE select_related()
-"""selected_related() - returns a QuerySet that will follow fk relationships,
-selecting additional related-object data when it executes its query. This is
-a performance booster which results in a single more complex query but means
-later use of fk relationship wont require db queries. since our product comes 
-with additional data from the category + brand and  tables
-we can use select_related() to join the qurey using the fk eliminating
-multiple individual queries it does not work. It does NOT work on reverse
-fk relationships so we will not be able to include product line"""
