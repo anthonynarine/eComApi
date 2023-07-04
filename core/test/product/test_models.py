@@ -37,3 +37,9 @@ class TestProductModel:
 
     ...
     ...
+
+
+class TestProductLineModel:
+    def test_str_method(self, product_line_factory):
+        obj = product_line_factory(sku="12345")
+        assert obj.__str__() == "12345"

@@ -12,7 +12,7 @@ that function individually."""
 import factory
 
 # bring in model for testing
-from core.product.models import Brand, Category, Product
+from core.product.models import Brand, Category, Product, ProductLine
 
 # COMMAND to run test: pytest
 # COMMAND to check possible code that needs testing: pytest --cov
@@ -59,4 +59,15 @@ class ProductFactory(factory.django.DjangoModelFactory):
     we're going to initiate and generate a brand, and then we do the same
     thing for the category as well.
     """
+    is_active = True
+
+
+class ProductLineFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = ProductLine
+
+    price = 10.00
+    sku = "12345"
+    stock_qty = 1
+    product = factory.SubFactory(ProductFactory)
     is_active = True
