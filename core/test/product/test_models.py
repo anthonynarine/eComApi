@@ -1,4 +1,5 @@
 import pytest
+from django.core.exceptions import ValidationError
 
 # import pytest will give access to the db
 # the actual db isn't used for testing pytest uses it to generate it's own data
@@ -24,8 +25,6 @@ class TestBrandModel:
         # Assert (boolean expression will return true or false)
         assert obj.__str__() == "test_brand"
 
-    ...
-
 
 class TestProductModel:
     def test_str_method(self, product_factory):
@@ -35,11 +34,14 @@ class TestProductModel:
         # Assert (boolean expression will return true or false)
         assert obj.__str__() == "test_product"
 
-    ...
-    ...
-
 
 class TestProductLineModel:
     def test_str_method(self, product_line_factory):
         obj = product_line_factory(sku="12345")
         assert obj.__str__() == "12345"
+
+    def test_duplicate_order_values(self, product_line_factory, product_factory):
+        obj = product_factory()
+        product_line_factory(order=1, product=obj)
+        with pytest.raises(ValidationError):
+            product_line_factory(order=1, product=obj).clean()
